@@ -1,6 +1,7 @@
 from typing import *
 from argparse import ArgumentParser, Namespace
 import os
+import logging
 from image_io import read_image, save_image
 from dither_image import dither_image
 
@@ -31,20 +32,33 @@ def main() -> None:
     args = parser.parse_args()
 
     for image_path in args.images:
-        image = read_image(image_path)
-        print(f"Loaded {image_path}.")
+        try:
+            image = read_image(image_path)
+        except exc:
+            logging.error(f"Failed to load {image_path}.")
+            logging.exception(exc)
+            continue
 
-        dithered = dither_image(
-            image,
-            grayscale=args.mode == "grayscale",
-            shade_count=args.shade_count,
-        )
-        print(f"Dithered {image_path}.")
+        try:
+            dithered = dither_image(
+                image,
+                grayscale=args.mode == "grayscale",
+                shade_count=args.shade_count,
+            )
+        except exc:
+            logging.error(f"Failed to dither {image_path}.")
+            logging.exception(exc)
+            continue
 
         image_name = os.path.basename(image_path)
         destination = os.path.join(args.out_dir, image_name)
-        save_image(destination, dithered)
-        print(f"Saved to {destination}.")
+        try:
+            save_image(destination, dithered)
+            print(f"Dithered {image_path} -> {destination}.")
+        except exc:
+            logging.error(f"Failed to save dithered image to {destination}.")
+            logging.exception(exc)
+            continue
 
 
 main()
