@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/beep/now/python/imgproc"
+set -gx VIRTUAL_ENV "/home/beep/now/script-dump/fs_dither"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
@@ -52,8 +52,8 @@ if test -z "$VIRTUAL_ENV_DISABLE_PROMPT"
         set -l old_status $status
 
         # Prompt override?
-        if test -n "(imgproc) "            
-            printf "%s%s" "(imgproc) " (set_color normal)
+        if test -n "(fs_dither) "            
+            printf "%s%s" "(fs_dither) " (set_color normal)
         else
             # ...Otherwise, prepend env
             set -l _checkbase (basename "$VIRTUAL_ENV")
