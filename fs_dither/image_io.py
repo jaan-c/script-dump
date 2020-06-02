@@ -9,7 +9,9 @@ def read_image(path: str) -> np.ndarray:
     """
     image = io.imread(path)
     if image.dtype == np.uint8:
-        return image / 255
+        image = img_as_float64(image)
+
+    return image
 
 
 def save_image(path: str, image: np.ndarray) -> None:
@@ -19,7 +21,7 @@ def save_image(path: str, image: np.ndarray) -> None:
         .jpg, .png etc.
     """
     if image.dtype == np.float64:
-        image = (image * 255).astype(int)
+        image = img_as_ubyte(image)
 
     io.imsave(path, image)
 
