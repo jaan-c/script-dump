@@ -6,7 +6,13 @@ import numpy as np
 def dither_image(
     image: np.ndarray, *, grayscale=True, shade_count=4
 ) -> np.ndarray:
-    """ Dither image with Floyd-Steinberg algorithm. """
+    """ Dither image with Floyd-Steinberg algorithm.
+    
+        Accepts grayscale (2D array), RGB (3D array with 3 channels) and RGBA 
+        (3D array with 4 channels) images. If grayscale is True, the returned 
+        image will be grayscale. shade_count is the number of shades for each 
+        color channel, alpha channel is left untouched. 
+    """
 
     image = rgb2gray(image) if grayscale else image
 
@@ -32,8 +38,8 @@ def dither_image(
 
 
 def _dither_channel(channel: np.ndarray, shade_count: int) -> np.ndarray:
-    """ Dither a single channel (2 dimensional array) of image using 
-        Floyd-Steinberg algorithm. """
+    """ Dither a single channel (2D array) of image using Floyd-Steinberg 
+        algorithm. """
 
     if len(channel.shape) != 2:
         raise ValueError(f"channel must exactly have 2 dimensions.")
