@@ -1,5 +1,5 @@
 from typing import *
-from skimage import io
+from skimage import io, img_as_ubyte, img_as_float64
 import numpy as np
 
 
@@ -8,7 +8,7 @@ def read_image(path: str) -> np.ndarray:
         RGB and RGBA images.
     """
     image = io.imread(path)
-    if not _values_in_range(image, 0, 1):
+    if image.dtype == np.uint8:
         return image / 255
 
 
@@ -18,13 +18,8 @@ def save_image(path: str, image: np.ndarray) -> None:
         The file extension of path will determine the encoding to be used, ie.
         .jpg, .png etc.
     """
-    if not _values_in_range(image, 0, 255):
+    if image.dtype == np.float64:
         image = (image * 255).astype(int)
 
     io.imsave(path, image)
 
-
-def _values_in_range(
-    ndarray: np.ndarray, minimum: int, maximum: int
-) -> bool:
-    return ndarray.min() <= minimum and ndarray.max() <= maximum
