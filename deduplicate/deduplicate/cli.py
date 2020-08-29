@@ -1,5 +1,5 @@
 from typing import *
-from duplicates import FileInfo
+from .duplicates import FileInfo
 
 
 class Cli:

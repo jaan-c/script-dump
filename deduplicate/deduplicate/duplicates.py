@@ -1,6 +1,6 @@
 from typing import *
 import itertools
-from files import FileInfo
+from .files import FileInfo
 
 K = TypeVar("K")
 V = TypeVar("V")

@@ -1,8 +1,8 @@
 from typing import *
 from argparse import ArgumentParser
-from files import list_descendant_files, FileInfo
-from duplicates import find_duplicates
-from cli import InteractiveCli, NonInteractiveCli
+from .files import list_descendant_files, FileInfo
+from .duplicates import find_duplicates
+from .cli import InteractiveCli, NonInteractiveCli
 
 
 CliArgs = NamedTuple("CliArgs", [("dir_path", str), ("keep_most_recent", bool)])
