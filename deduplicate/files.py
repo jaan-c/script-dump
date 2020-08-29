@@ -64,10 +64,10 @@ class _Hash:
             return hash_sink.hexdigest()
 
 
-def list_descendant_files(root_dir_path: str) -> Iterable[FileInfo]:
-    """ Generates absolute paths of descendant files in root_dir_path. """
+def list_descendant_files(dir_path: str) -> Iterable[FileInfo]:
+    """ Generates absolute paths of descendant files in dir_path. """
 
-    for dir_path, _, file_names in os.walk(root_dir_path):
+    for dir_path, _, file_names in os.walk(dir_path):
         dir_path = os.path.abspath(dir_path)
         file_paths = map(lambda name: os.path.join(dir_path, name), file_names)
         for p in file_paths:
