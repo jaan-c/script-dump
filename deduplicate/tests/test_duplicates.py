@@ -21,10 +21,15 @@ def test_find_duplicates():
             2048
         ) as r1, temp_file_of_size(
             2048
-        ) as r2:
+        ) as r2, temp_file_of_size(
+            0
+        ) as z1, temp_file_of_size(
+            0
+        ) as z2:
             # ph1, ph2: partial hash matches
             # h1, h2: full hash matches
             # r1, r2: completely random content but same size
+            # z1, z2: empty files
             infos = map(FileInfo, [ph1, ph2, h1, h2, r1, r2])
             duplicates = find_duplicates(infos)
 
