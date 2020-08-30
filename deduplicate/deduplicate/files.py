@@ -24,14 +24,14 @@ class FileInfo:
 
     def get_partial_hash(self) -> str:
         if self._partial_hash == None:
-            self._partial_hash = _Hash.partial(self.path)
+            self._partial_hash = _partial_hash(self.path)
 
         assert isinstance(self._partial_hash, str)
         return self._partial_hash
 
     def get_hash(self) -> str:
         if self._hash == None:
-            self._hash = _Hash.full(self.path)
+            self._hash = _full_hash(self.path)
 
         assert isinstance(self._hash, str)
         return self._hash
@@ -40,28 +40,26 @@ class FileInfo:
         return f"FileInfo(path={self.path}, size={self.get_size()}, partial_hash={self.get_partial_hash()}, hash={self.get_hash()})"
 
 
-class _Hash:
-    @staticmethod
-    def partial(file_path: str, size: int = 1024) -> str:
-        """ Compute checksum of file_path for the first size bytes of file. """
+def _partial_hash(file_path: str, size: int = 1024) -> str:
+    """ Compute checksum of file_path for the first size bytes of file. """
 
-        with open(file_path, "rb") as file:
-            byte = file.read(size)
-            sha256 = hashlib.sha256(byte).hexdigest()
-            return sha256
+    with open(file_path, "rb") as file:
+        byte = file.read(size)
+        sha256 = hashlib.sha256(byte).hexdigest()
+        return sha256
 
-    @staticmethod
-    def full(file_path: str, chunk_size=8388608) -> str:
-        """ Compute checksum for file_path. chunk_size defaults to 8 MB."""
 
-        with open(file_path, "rb") as file:
-            hash_sink = hashlib.sha256()
+def _full_hash(file_path: str, chunk_size=8388608) -> str:
+    """ Compute checksum for file_path. chunk_size defaults to 8 MB."""
+
+    with open(file_path, "rb") as file:
+        hash_sink = hashlib.sha256()
+        chunk = file.read(chunk_size)
+        while chunk:
+            hash_sink.update(chunk)
             chunk = file.read(chunk_size)
-            while chunk:
-                hash_sink.update(chunk)
-                chunk = file.read(chunk_size)
 
-            return hash_sink.hexdigest()
+        return hash_sink.hexdigest()
 
 
 def list_descendant_files(dir_path: str) -> Iterable[FileInfo]:
