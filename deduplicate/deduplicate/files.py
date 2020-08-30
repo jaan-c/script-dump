@@ -36,9 +36,6 @@ class FileInfo:
         assert isinstance(self._hash, str)
         return self._hash
 
-    def __repr__(self) -> str:
-        return f"FileInfo(path={self.path}, size={self.get_size()}, partial_hash={self.get_partial_hash()}, hash={self.get_hash()})"
-
 
 def _partial_hash(file_path: str, size: int = 1024) -> str:
     """ Compute checksum of file_path for the first size bytes of file. """
