@@ -39,7 +39,11 @@ def _parse_args(raw_cli_args: Sequence[str]) -> _CliArgs:
     parser.add_argument(
         "--keep-filter",
         choices=["last-modified"],
-        help="automatic deduplication with supplied keep filter",
+        help="""
+            automatic deduplication with supplied keep filter, passing 
+            'last_modified' keeps the most recently modified file and deletes 
+            everything else
+        """,
     )
 
     parsed = parser.parse_args(raw_cli_args)
