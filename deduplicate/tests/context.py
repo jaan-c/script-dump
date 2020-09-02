@@ -1,4 +1,4 @@
-""" 
+"""
 Give relative context for easy import in tests.
 
 from .context import deduplicate

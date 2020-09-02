@@ -1,30 +1,53 @@
 from typing import *
-from .duplicates import FileInfo
+import argparse
+from . import duplicate
+from . import delete
+from . import keep
 
 
-class Cli:
-    duplicates: Mapping[str, List[FileInfo]]
+def execute(raw_cli_args: Sequence[str]) -> None:
+    cli_args = _parse_args(raw_cli_args)
 
-    def __init__(self, duplicates: Mapping[str, List[FileInfo]]):
-        self.duplicates = duplicates
+    print("Finding duplicates.")
+    duplicate_groups = duplicate.find_duplicates(cli_args.dir_path)
 
-    def run(self) -> None:
-        raise NotImplementedError()
+    exit()
+    if not cli_args.keep_filter:
+        _interactive_delete(duplicate_groups)
+    else:
+        # Guard against newly added keep filters.
+        assert cli_args.keep_filter == "last_modified"
+
+        for duplicates in duplicate_groups.values():
+            delete.delete_duplicates(keep.last_modified(), duplicates)
 
 
-class InteractiveCli(Cli):
-    def run(self) -> None:
-        pass
+class _CliArgs(NamedTuple):
+    dir_path: str
+    keep_filter: Optional[Literal["last_modified"]]
 
 
-class NonInteractiveCli(Cli):
-    keep_most_recent: bool
+def _parse_args(raw_cli_args: Sequence[str]) -> _CliArgs:
+    parser = argparse.ArgumentParser(
+        description="recursively deduplicate files in dir_path",
+        epilog="""
+            If --keep-filter is supplied, deduplication happens automatically, 
+            otherwise an interactive interface is shown.
+        """,
+    )
+    parser.add_argument("dir", type=str, help="directory to deduplicate")
+    parser.add_argument(
+        "--keep-filter",
+        choices=["last-modified"],
+        help="automatic deduplication with supplied keep filter",
+    )
 
-    def __init__(
-        self, duplicates: Mapping[str, List[FileInfo]], keep_most_recent: bool
-    ):
-        super(NonInteractiveCli, self).__init__(duplicates)
-        self.keep_most_recent = keep_most_recent
+    parsed = parser.parse_args(raw_cli_args)
+    return _CliArgs(
+        dir_path=parsed.dir,
+        keep_filter="last_modified" if parsed.keep_filter else None,
+    )
 
-    def run(self) -> None:
-        pass
+
+def _interactive_delete(duplicate_groups: Mapping[str, Sequence[str]]) -> None:
+    pass

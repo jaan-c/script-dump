@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 import string
-from .context import FileInfo
+from .context import FileInfo, list_descendant_files, InvalidPathException
 from .utils import temp_file_of_size, temp_file_with_contents, get_random_bytes
 
 
@@ -73,5 +73,12 @@ class TestFileInfo:
             assert info.get_partial_hash() != info.get_hash()
 
 
+def test_list_descendant_files_with_file_path():
+    with temp_file_of_size(0) as file_path:
+        with pytest.raises(InvalidPathException):
+            list_descendant_files(file_path)
+
+
 def is_hex_string(text: str) -> bool:
     return all(c in string.hexdigits for c in text)
+
