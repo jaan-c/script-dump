@@ -3,7 +3,7 @@ import argparse
 from . import duplicate, delete, keep
 
 
-def execute(raw_cli_args: Sequence[str]) -> None:
+def main(raw_cli_args: Sequence[str]) -> None:
     cli_args = _parse_args(raw_cli_args)
 
     print("Finding duplicates.")
