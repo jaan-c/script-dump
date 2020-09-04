@@ -1,8 +1,6 @@
 from typing import *
 import argparse
-from . import duplicate
-from . import delete
-from . import keep
+from . import duplicate, delete, keep
 
 
 def execute(raw_cli_args: Sequence[str]) -> None:

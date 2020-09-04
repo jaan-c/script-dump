@@ -1,7 +1,5 @@
 from typing import *
-import itertools
-import functools
-import os
+import itertools, functools, os
 from . import fileinfo
 
 K = TypeVar("K", bound=Hashable)

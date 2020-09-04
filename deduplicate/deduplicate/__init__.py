@@ -6,5 +6,4 @@ if __name__ == "__main__":
 else:
     from .duplicate import find_duplicates
     from .delete import delete_duplicates
-    from . import keep
-    from . import fileinfo
+    from . import keep, fileinfo

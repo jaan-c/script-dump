@@ -1,7 +1,5 @@
 from typing import *
-import os
-import datetime
-import hashlib
+import os, datetime, hashlib
 
 
 def get_size(file_path: str) -> int:

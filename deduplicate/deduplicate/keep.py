@@ -1,7 +1,6 @@
 from typing import *
 import functools
-from . import delete
-from . import fileinfo
+from . import delete, fileinfo
 
 
 def _return_keep_filter(keep_filter: delete.KeepFilter):
