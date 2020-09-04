@@ -1,6 +1,6 @@
 if __name__ == "__main__":
     import sys
-    import cli
+    from . import cli
 
     cli.execute(sys.argv)
 else:
