@@ -9,7 +9,6 @@ def main(raw_cli_args: Sequence[str]) -> None:
     print("Finding duplicates.")
     duplicate_groups = duplicate.find_duplicates(cli_args.dir_path)
 
-    exit()
     if not cli_args.keep_filter:
         _interactive_delete(duplicate_groups)
     else:
