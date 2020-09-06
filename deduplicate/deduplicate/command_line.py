@@ -72,7 +72,7 @@ def _interactive_delete(duplicate_groups: Mapping[str, Sequence[str]]) -> None:
 
 
 def _print_with_position(duplicates: Sequence[str]) -> None:
-    position_width = 3
+    position_width = 4
     for position, path in zip(range(1, len(duplicates) + 1), duplicates):
         print(f"{str(position).rjust(position_width)}.) {path}")
 
