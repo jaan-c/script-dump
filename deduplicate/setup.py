@@ -12,9 +12,7 @@ setuptools.setup(
     ],
     author="jaan-c",
     license="MIT",
-    entry_points={
-        "console_scripts": ["deduplicate=deduplicate.command_line:main"]
-    },
+    entry_points={"console_scripts": ["deduplicate=deduplicate.__main__:main"]},
     packages=["deduplicate"],
     install_requires=[],
     zip_safe=True,
