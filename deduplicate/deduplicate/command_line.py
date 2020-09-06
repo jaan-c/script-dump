@@ -47,7 +47,9 @@ def _parse_args(raw_cli_args: Sequence[str]) -> _CliArgs:
     parsed = parser.parse_args(raw_cli_args)
     return _CliArgs(
         dir_path=parsed.dir,
-        keep_filter="last_modified" if parsed.keep_filter else None,
+        keep_filter="last_modified"
+        if parsed.keep_filter == "last-modified"
+        else None,
     )
 
 
