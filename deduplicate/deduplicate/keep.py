@@ -30,7 +30,9 @@ def duplicate_position(position: int) -> delete.KeepFilter:
 
 @_return_keep_filter
 def last_modified(duplicate_paths: Sequence[str]) -> Sequence[str]:
-    mod_datetimes = map(fileinfo.get_modification_datetime, duplicate_paths)
-    most_recent_datetime_ix = list(mod_datetimes).index(max(mod_datetimes))
+    mod_datetimes = list(
+        map(fileinfo.get_modification_datetime, duplicate_paths)
+    )
+    most_recent_datetime_ix = mod_datetimes.index(max(mod_datetimes))
 
     return [duplicate_paths[most_recent_datetime_ix]]
