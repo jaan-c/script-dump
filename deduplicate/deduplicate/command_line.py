@@ -32,7 +32,7 @@ def _parse_args(raw_cli_args: Sequence[str]) -> _CliArgs:
             otherwise an interactive interface is shown.
         """,
     )
-    parser.add_argument("dir", type=str, help="directory to deduplicate")
+    parser.add_argument("dir", help="directory to deduplicate")
     parser.add_argument(
         "--keep-filter",
         choices=["last-modified"],
