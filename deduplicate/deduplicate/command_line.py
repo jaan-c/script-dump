@@ -3,8 +3,8 @@ import sys, argparse
 from . import duplicate, delete, keep
 
 
-def main(raw_cli_args: Sequence[str] = sys.argv) -> None:
-    cli_args = _parse_args(raw_cli_args)
+def main() -> None:
+    cli_args = _parse_args(sys.argv[1:])
 
     print("Finding duplicates.")
     duplicate_groups = duplicate.find_duplicates(cli_args.dir_path)
