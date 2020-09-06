@@ -6,6 +6,8 @@ def main() -> None:
 
     print("finding duplicates...")
     duplicate_groups = find_duplicates(args.dir_path)
+    if not duplicate_groups:
+        print("no duplicates")
 
     if not args.keep_filter:
         command_line.interactive_delete(duplicate_groups)
