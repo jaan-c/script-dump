@@ -67,6 +67,7 @@ def _interactive_delete(duplicate_groups: Mapping[str, Sequence[str]]) -> None:
                 delete_file=_delete_with_logging,
             )
         else:
+            print()
             print(f"skipped {hash}")
 
 
