@@ -13,15 +13,15 @@ def find_duplicates(dir_path: str) -> Dict[str, List[str]]:
 
     grouped_by_size = _group_by(fileinfo.get_size, file_paths)
     grouped_by_size.pop(0, None)
-    _delete_singleton_paths(grouped_by_size)
+    grouped_by_size = _omit_singleton_paths(grouped_by_size)
     file_paths = _ungroup(grouped_by_size)
 
     grouped_by_partial_hash = _group_by(fileinfo.get_partial_hash, file_paths)
-    _delete_singleton_paths(grouped_by_partial_hash)
+    grouped_by_partial_hash = _omit_singleton_paths(grouped_by_partial_hash)
     file_paths = _ungroup(grouped_by_partial_hash)
 
     grouped_by_hash = _group_by(fileinfo.get_hash, file_paths)
-    _delete_singleton_paths(grouped_by_hash)
+    grouped_by_hash = _omit_singleton_paths(grouped_by_hash)
 
     return grouped_by_hash
 
@@ -50,7 +50,7 @@ def _ungroup(path_groups: Mapping[K, Sequence[str]]) -> Iterable[str]:
     return itertools.chain.from_iterable(path_groups.values())
 
 
-def _delete_singleton_paths(path_groups: Dict[K, List[str]]) -> None:
-    for key, paths in path_groups.items():
-        if len(paths) == 1:
-            del path_groups[key]
+def _omit_singleton_paths(
+    path_groups: Dict[K, List[str]]
+) -> Dict[K, List[str]]:
+    return {key: paths for key, paths in path_groups.items() if len(paths) != 1}
