@@ -52,5 +52,5 @@ def _ungroup(path_groups: Mapping[K, Sequence[str]]) -> Iterable[str]:
 
 def _delete_singleton_paths(path_groups: Dict[K, List[str]]) -> None:
     for key, paths in path_groups.items():
-        if len(paths) == 0:
+        if len(paths) == 1:
             del path_groups[key]
