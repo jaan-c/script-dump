@@ -4,6 +4,7 @@ from . import find_duplicates, command_line
 def main() -> None:
     args = command_line.parse_args()
 
+    print("finding duplicates...")
     duplicate_groups = find_duplicates(args.dir_path)
 
     if not args.keep_filter:
