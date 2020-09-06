@@ -1,9 +1,9 @@
 from typing import *
-import argparse
+import sys, argparse
 from . import duplicate, delete, keep
 
 
-def main(raw_cli_args: Sequence[str]) -> None:
+def main(raw_cli_args: Sequence[str] = sys.argv) -> None:
     cli_args = _parse_args(raw_cli_args)
 
     print("Finding duplicates.")
