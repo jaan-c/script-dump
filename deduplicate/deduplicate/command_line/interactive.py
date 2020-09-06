@@ -12,6 +12,7 @@ def interactive_delete(duplicate_groups: Mapping[str, Sequence[str]]) -> None:
         position = _prompt_position(len(duplicates))
 
         if position:
+            print()
             delete_duplicates(
                 keep.duplicate_position(position),
                 duplicates,
