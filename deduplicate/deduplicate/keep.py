@@ -3,6 +3,10 @@ import functools
 from . import delete, fileinfo
 
 
+class KeepFilterException(Exception):
+    pass
+
+
 def _return_keep_filter(keep_filter: delete.KeepFilter):
     """Wrap keep_filter inside an empty argument function that returns it."""
 
@@ -21,7 +25,7 @@ def duplicate_position(position: int) -> delete.KeepFilter:
         nonlocal position
 
         if not (1 <= position <= len(duplicate_paths)):
-            raise delete.StateError("position out of range")
+            raise KeepFilterException("position out of range")
 
         return [duplicate_paths[position - 1]]
 
