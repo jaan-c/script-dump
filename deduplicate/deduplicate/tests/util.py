@@ -23,10 +23,8 @@ def temp_file_path_with_mtime(
 
         yield file_path
     finally:
-        try:
+        with contextlib.suppress(FileNotFoundError):
             os.remove(file_path)
-        except FileNotFoundError:
-            pass
 
 
 @contextlib.contextmanager
@@ -38,7 +36,5 @@ def temp_file_with_content(content: bytes) -> Iterator[str]:
 
         yield file_path
     finally:
-        try:
+        with contextlib.suppress(FileNotFoundError):
             os.remove(file_path)
-        except FileNotFoundError:
-            pass
