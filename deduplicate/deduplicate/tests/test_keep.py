@@ -2,7 +2,7 @@ from typing import *
 import pytest
 import datetime
 from . import util
-from .. import keep
+from .. import keep, delete
 
 
 def test_duplicate_position():
@@ -10,10 +10,10 @@ def test_duplicate_position():
 
     assert keep.duplicate_position(3)(duplicates) == [duplicates[2]]
 
-    with pytest.raises(keep.KeepFilterException):
+    with pytest.raises(delete.KeepFilterException):
         keep.duplicate_position(0)(duplicates)
 
-    with pytest.raises(keep.KeepFilterException):
+    with pytest.raises(delete.KeepFilterException):
         keep.duplicate_position(11)(duplicates)
 
 
