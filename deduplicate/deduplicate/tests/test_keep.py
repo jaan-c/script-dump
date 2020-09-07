@@ -18,11 +18,13 @@ def test_duplicate_position():
 
 
 def test_last_modified():
-    with util.temp_file_path_with_mtime(
+    temp_file_with_mtime = util.temp_file_with_mtime
+
+    with temp_file_with_mtime(
         datetime.datetime.fromtimestamp(0)
-    ) as p1, util.temp_file_path_with_mtime(
+    ) as p1, temp_file_with_mtime(
         datetime.datetime.now()
-    ) as p2, util.temp_file_path_with_mtime(
+    ) as p2, temp_file_with_mtime(
         datetime.datetime(2000, 1, 1)
     ) as p3:
         assert keep.last_modified()([p1, p2, p3]) == [p2]

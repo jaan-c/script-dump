@@ -12,7 +12,7 @@ def rand_bytes(size: int) -> bytes:
 
 
 @contextlib.contextmanager
-def temp_file_path_with_mtime(
+def temp_file_with_mtime(
     modification_datetime: datetime.datetime,
 ) -> Iterator[str]:
     try:
