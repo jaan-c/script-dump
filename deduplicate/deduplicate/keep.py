@@ -21,7 +21,7 @@ def duplicate_position(position: int) -> delete.KeepFilter:
         nonlocal position
 
         if not (1 <= position <= len(duplicate_paths)):
-            raise delete.KeepFilterException("position out of range")
+            raise delete.KeepFilterError("position out of range")
 
         return [duplicate_paths[position - 1]]
 

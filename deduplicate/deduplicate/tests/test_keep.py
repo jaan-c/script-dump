@@ -10,10 +10,10 @@ def test_duplicate_position():
 
     assert keep.duplicate_position(3)(duplicates) == [duplicates[2]]
 
-    with pytest.raises(delete.KeepFilterException):
+    with pytest.raises(delete.KeepFilterError):
         keep.duplicate_position(0)(duplicates)
 
-    with pytest.raises(delete.KeepFilterException):
+    with pytest.raises(delete.KeepFilterError):
         keep.duplicate_position(11)(duplicates)
 
 
