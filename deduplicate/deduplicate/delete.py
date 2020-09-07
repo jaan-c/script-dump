@@ -2,7 +2,7 @@ from typing import *
 import os
 
 
-class StateError(Exception):
+class KeepFilterException(Exception):
     pass
 
 
@@ -16,7 +16,9 @@ def delete_duplicates(
 ) -> None:
     keep_paths = set(keep_filter(duplicate_paths))
     if not keep_paths.issubset(duplicate_paths):
-        raise StateError("keep_filter must return a subset of duplicate_paths")
+        raise KeepFilterException(
+            "keep_filter must return a subset of duplicate_paths"
+        )
 
     for p in duplicate_paths:
         if p not in keep_paths:
