@@ -25,7 +25,5 @@ def test_fileinfo_funcs_with_existing_file():
     """fileinfo functions returns anything except None with existing file."""
 
     for func in FILEINFO_FUNCS:
-        with util.temp_file_with_content(
-            util.rand_bytes(1024 * 10)
-        ) as file_path:
+        with util.temp_file_with_rand_content(1024 * 10) as file_path:
             assert func(file_path) is not None

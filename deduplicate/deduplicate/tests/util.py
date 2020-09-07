@@ -38,3 +38,9 @@ def temp_file_with_content(content: bytes) -> Iterator[str]:
     finally:
         with contextlib.suppress(FileNotFoundError):
             os.remove(file_path)
+
+
+@contextlib.contextmanager
+def temp_file_with_rand_content(size: int) -> Iterator[str]:
+    with temp_file_with_content(rand_bytes(size)) as file_path:
+        yield file_path
