@@ -48,3 +48,8 @@ deduplicate
         duplicate_position(position: int) -> KeepFilter
         last_modified() -> KeepFilter
 ```
+
+## Others
+
+-   Filesystem level deduplication
+    -   http://dashohoxha.fs.al/deduplicating-data-with-xfs-and-reflinks/
