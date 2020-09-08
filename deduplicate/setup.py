@@ -13,7 +13,7 @@ setuptools.setup(
     author="jaan-c",
     license="MIT",
     entry_points={"console_scripts": ["deduplicate=deduplicate.__main__:main"]},
-    packages=["deduplicate"],
+    packages=["deduplicate", "deduplicate.command_line"],
     install_requires=["yaspin"],
     zip_safe=True,
     include_package_data=False,
