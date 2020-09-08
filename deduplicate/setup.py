@@ -14,7 +14,7 @@ setuptools.setup(
     license="MIT",
     entry_points={"console_scripts": ["deduplicate=deduplicate.__main__:main"]},
     packages=["deduplicate"],
-    install_requires=[],
+    install_requires=["yaspin"],
     zip_safe=True,
     include_package_data=False,
 )

@@ -1,11 +1,14 @@
+import yaspin
+from yaspin import spinners
 from . import find_duplicates, command_line
 
 
 def main() -> None:
     args = command_line.parse_args()
 
-    print("finding duplicates...")
-    duplicate_groups = find_duplicates(args.dir_path)
+    with yaspin.yaspin(spinners.Spinners.noise, text="finding duplicates"):
+        duplicate_groups = find_duplicates(args.dir_path)
+
     if not duplicate_groups:
         print("no duplicates")
 
