@@ -5,4 +5,5 @@ A dump for single purpose scripts in various languages.
 # Scripts
 
 -   `deduplicate`
-    -   recursively delete duplicate files in a directory
+    -   Recursively delete duplicate files in a directory interactively
+        or automatically with a keep filter.
