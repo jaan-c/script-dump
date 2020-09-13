@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="deduplicate",
-    version="0.5",
+    version="0.8",
     description="Deduplicate files interactively or based on a keep filter.",
     classifiers=[
         "Development Status :: 4 - Beta",
