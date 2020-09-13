@@ -13,7 +13,7 @@ setuptools.setup(
     author="jaan-c",
     license="MIT",
     entry_points={"console_scripts": ["ftag=ftag.__main__:main"]},
-    packages=["ftag"],
+    packages=["ftag", "ftag.command_line"],
     install_requires=[],
     zip_safe=True,
     include_package_data=False,
