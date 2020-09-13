@@ -16,9 +16,9 @@ def find_duplicates(dir_path: str) -> Dict[str, List[str]]:
     grouped_by_size = _omit_singleton_paths(grouped_by_size)
     file_paths = _ungroup(grouped_by_size)
 
-    grouped_by_partial_hash = _group_by(fileinfo.get_partial_hash, file_paths)
-    grouped_by_partial_hash = _omit_singleton_paths(grouped_by_partial_hash)
-    file_paths = _ungroup(grouped_by_partial_hash)
+    grouped_by_head_hash = _group_by(fileinfo.get_head_hash, file_paths)
+    grouped_by_head_hash = _omit_singleton_paths(grouped_by_head_hash)
+    file_paths = _ungroup(grouped_by_head_hash)
 
     grouped_by_hash = _group_by(fileinfo.get_hash, file_paths)
     grouped_by_hash = _omit_singleton_paths(grouped_by_hash)

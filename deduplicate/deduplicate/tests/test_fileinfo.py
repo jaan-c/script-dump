@@ -7,7 +7,7 @@ from .. import fileinfo
 FILEINFO_FUNCS: Final = [
     fileinfo.get_size,
     fileinfo.get_modification_datetime,
-    fileinfo.get_partial_hash,
+    fileinfo.get_head_hash,
     fileinfo.get_hash,
 ]
 

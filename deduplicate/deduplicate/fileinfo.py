@@ -11,7 +11,7 @@ def get_modification_datetime(file_path: str) -> datetime.datetime:
     return datetime.datetime.fromtimestamp(seconds_since_epoch)
 
 
-def get_partial_hash(file_path: str, head_size: int = 1024) -> str:
+def get_head_hash(file_path: str, size: int = 1024) -> str:
     with open(file_path, "rb") as file:
         head = file.read(1024)
         return hashlib.sha256(head).hexdigest()
