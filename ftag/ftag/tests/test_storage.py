@@ -1,15 +1,15 @@
 from typing import *
 import pytest
 import tempfile
-from .. import logic, storage
+from .. import FileTag, save_file_tags, read_file_tags
 
 
 def test_save_is_inverse_of_read():
     file_tags = [
-        logic.FileTag("/home/mitlof/mitlof_file", ["mitlof"]),
-        logic.FileTag("/home/mitlof/biflof_file", ["mitlof", "biflof"]),
+        FileTag("/home/mitlof/mitlof_file", ["mitlof"]),
+        FileTag("/home/mitlof/biflof_file", ["mitlof", "biflof"]),
     ]
 
     with tempfile.NamedTemporaryFile() as file:
-        storage.save_file_tags(file_tags, path=file.name)
-        assert storage.read_file_tags(path=file.name) == file_tags
+        save_file_tags(file_tags, path=file.name)
+        assert read_file_tags(path=file.name) == file_tags
