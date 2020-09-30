@@ -1,6 +1,6 @@
 from typing import *
 import pytest
-from .. import find_duplicates, fileinfo
+from .. import find, fileinfo
 from . import util
 import tempfile
 
@@ -26,7 +26,7 @@ def test_find_duplicates():
         ) as r1, util.temp_file_with_rand_content(
             2048, dir_path
         ) as r2:
-            duplicate_groups = find_duplicates(dir_path)
+            duplicate_groups = find.find_duplicates(dir_path)
 
             assert len(duplicate_groups) == 1
             assert duplicate_groups == {fileinfo.get_hash(h1): [h1, h2]}
