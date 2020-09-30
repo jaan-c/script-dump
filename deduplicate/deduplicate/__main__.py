@@ -11,6 +11,7 @@ def main() -> None:
 
     if not duplicate_groups:
         print("no duplicates")
+        return
 
     if not args.keep_filter:
         command_line.interactive_delete(duplicate_groups)
