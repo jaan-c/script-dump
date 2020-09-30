@@ -14,23 +14,22 @@ The trailing slash is required, it tells pip3 to install a local package instead
 ## As a Command
 
 ```
-usage: deduplicate [-h] [--keep-filter {last-modified}] dir
+usage: deduplicate [-h] [--show-only] [--keep-filter {last-modified}] dir
 
-recursively delete duplicate files in a directory interactively or
-automatically with a keep filter
+recursively delete duplicate files in a directory
 
 positional arguments:
   dir                   directory to deduplicate
 
 optional arguments:
   -h, --help            show this help message and exit
+  --show-only           only display duplicates, no deletion happens
   --keep-filter {last-modified}
                         automatic deduplication with supplied keep filter,
                         passing 'last_modified' keeps the most recently
                         modified file and deletes everything else
 
-If --keep-filter is supplied, deduplication happens automatically, otherwise
-an interactive interface is shown.
+If no --keep-filter is supplied, deduplication happens interactively.
 ```
 
 ## As a Module

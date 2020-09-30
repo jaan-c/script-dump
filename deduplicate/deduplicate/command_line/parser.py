@@ -11,12 +11,11 @@ class CommandLineArgs(NamedTuple):
 def parse_args(raw_cli_args: Sequence[str] = sys.argv) -> CommandLineArgs:
     parser = argparse.ArgumentParser(
         description="""
-            recursively delete duplicate files in a directory interactively
-            or automatically with a keep filter
+            recursively delete duplicate files in a directory
         """,
         epilog="""
-            If --keep-filter is supplied, deduplication happens automatically, 
-            otherwise an interactive interface is shown.
+            If no --keep-filter is supplied, deduplication happens 
+            interactively.
         """,
     )
     parser.add_argument("dir", help="directory to deduplicate")
