@@ -13,6 +13,10 @@ def main() -> None:
         print("no duplicates")
         return
 
+    if args.show_only:
+        command_line.show(duplicate_groups)
+        return
+
     if not args.keep_filter:
         command_line.interactive_delete(duplicate_groups)
     else:
