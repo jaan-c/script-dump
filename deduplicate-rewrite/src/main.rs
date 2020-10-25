@@ -5,7 +5,7 @@ mod find;
 fn main() {}
 
 #[cfg(test)]
-mod test_utils {
+mod test_util {
     use rand::Rng;
     use std::fs::File;
     use std::io::{Seek, SeekFrom, Write};
