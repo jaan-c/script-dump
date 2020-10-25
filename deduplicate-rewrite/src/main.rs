@@ -14,11 +14,11 @@ mod test_utils {
         TempDir::new().unwrap()
     }
 
-    pub fn random_file(size: usize) -> NamedTempFile {
-        file_with(&random_bytes(size))
+    pub fn temp_random_file(size: usize) -> NamedTempFile {
+        temp_file_with_content(&random_bytes(size))
     }
 
-    pub fn file_with(content: &[u8]) -> NamedTempFile {
+    pub fn temp_file_with_content(content: &[u8]) -> NamedTempFile {
         let mut file = NamedTempFile::new().unwrap();
         file.write(content).unwrap();
         file.flush().unwrap();
