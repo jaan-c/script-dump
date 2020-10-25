@@ -8,7 +8,11 @@ fn main() {}
 mod test_utils {
     use rand::Rng;
     use std::io::{Seek, SeekFrom, Write};
-    use tempfile::NamedTempFile;
+    use tempfile::{NamedTempFile, TempDir};
+
+    pub fn temp_dir() -> TempDir {
+        TempDir::new().unwrap()
+    }
 
     pub fn random_file(size: usize) -> NamedTempFile {
         file_with(&random_bytes(size))
