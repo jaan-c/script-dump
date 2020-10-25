@@ -53,16 +53,14 @@ where
 
 #[cfg(test)]
 mod tests {
+    use crate::test_utils as utils;
     use filetime::{self, FileTime};
-    use rand::Rng;
-    use std::io::{Seek, SeekFrom, Write};
     use std::time::SystemTime;
-    use tempfile::{self, NamedTempFile};
 
     #[test]
     fn size_test() {
-        let file = random_file(1024);
-        let zero_file = random_file(0);
+        let file = utils::random_file(1024);
+        let zero_file = utils::random_file(0);
 
         assert_eq!(super::size(&file).unwrap(), 1024);
         assert_eq!(super::size(&zero_file).unwrap(), 0);
@@ -70,8 +68,8 @@ mod tests {
 
     #[test]
     fn modification_time_test() {
-        let old_file = random_file(1024);
-        let now_file = random_file(2048);
+        let old_file = utils::random_file(1024);
+        let now_file = utils::random_file(2048);
         let zero = SystemTime::UNIX_EPOCH;
         let now = SystemTime::now();
 
@@ -88,7 +86,7 @@ mod tests {
     fn all_hash_test() {
         // ~2048 bytes dummy text.
         let lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum convallis nibh sit amet est faucibus, quis lacinia metus consequat. Sed ac arcu nibh. Integer bibendum turpis est, at venenatis nibh tempor ut. Maecenas mattis felis massa, ac laoreet risus dignissim eget. Donec faucibus id odio quis eleifend. Proin nunc metus, tincidunt maximus nibh ac, ultrices tempus est. Aliquam sollicitudin dui a dolor bibendum pharetra. Vivamus at felis nec turpis posuere feugiat. Maecenas viverra velit a quam aliquam tempor. Donec eros libero, mattis vitae justo ornare, aliquam blandit dui. Pellentesque sit amet metus a tortor malesuada dignissim. Integer vel laoreet ex. Donec quam metus, lobortis eu nulla et, semper aliquet risus. Integer egestas, ipsum vitae ornare rhoncus, felis massa feugiat eros, sit amet gravida odio ipsum a mauris. Suspendisse potenti. Morbi dolor tellus, bibendum a consectetur nec, sagittis id nisi. Sed tempus, ligula vitae malesuada tristique, urna ante gravida elit, eget scelerisque erat turpis bibendum est. Aliquam erat volutpat. Sed rutrum dolor at finibus placerat. Curabitur imperdiet lectus dolor, quis bibendum dui consequat in. Duis pharetra sem a velit pulvinar, in laoreet purus aliquet. Maecenas dignissim tristique orci a aliquet. Fusce dictum sit amet quam ac interdum. Nulla sagittis, neque a molestie tincidunt, diam purus condimentum augue, ut dapibus ipsum elit eget sapien. Vestibulum at magna turpis. Morbi congue purus sit amet augue interdum laoreet at in nulla. Mauris sed libero dolor. Maecenas tempor nunc eros, non pulvinar augue lobortis nec. Nam posuere, nunc ac tristique semper, nibh massa semper orci, at ornare sapien justo quis justo. Duis luctus ipsum ac mi mattis, aliquam vehicula nulla imperdiet. Fusce ac accumsan tellus. Maecenas consequat pharetra ultrices. Nulla sagittis tellus lorem, nec finibus purus consequat sit amet. Nulla facilisi. Maecenas dictum id libero mollis porttitor. Ut vehicula, lorem ac scelerisque cursus, tellus sem tristique lectus, a cursus magna odio et.";
-        let file = file_with(lorem.as_bytes());
+        let file = utils::file_with(lorem.as_bytes());
         let head_hash = super::head_hash(&file).unwrap();
         let hash = super::hash(&file).unwrap();
 
@@ -99,30 +97,5 @@ mod tests {
 
         assert_eq!(head_hash, String::from("85df27113928871d466a47abdfa764ebbc727cd06132bb32aa40aa78a7956e9f"));
         assert_eq!(hash, String::from("a875858b0128bd3ce6d56a7c2696c517b5d0307788d5dfa006a37dd3e478e80f"));
-    }
-
-    fn random_file(size: usize) -> NamedTempFile {
-        file_with(&random_bytes(size))
-    }
-
-    fn file_with(content: &[u8]) -> NamedTempFile {
-        let mut file = NamedTempFile::new().unwrap();
-        file.write(content).unwrap();
-        file.flush().unwrap();
-        file.as_file().sync_all().unwrap(); // Sync metadata with file changes.
-        file.seek(SeekFrom::Start(0)).unwrap();
-
-        file
-    }
-
-    fn random_bytes(size: usize) -> Vec<u8> {
-        let mut bytes = Vec::with_capacity(size);
-        let mut rng = rand::thread_rng();
-        for _ in 0..size {
-            let b = rng.gen::<u8>();
-            bytes.push(b);
-        }
-
-        bytes
     }
 }
