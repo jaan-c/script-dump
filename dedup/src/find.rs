@@ -10,7 +10,10 @@ const HEAD_SIZE: usize = 4_000;
 const FILE_BUFFER_SIZE: usize = 16_000;
 const HASH_ALGORITHM: Algorithm = Algorithm::SHA256;
 
-/// Find all duplicate files under directory.
+/// Find all duplicate files under `directory`.
+///
+/// Zero byte files are ignored. An [`std::io::Error`] is returned immediately
+/// for any IO errors encountered.
 pub fn duplicate_files<P>(directory: P) -> io::Result<Vec<Duplicate>>
 where
     P: AsRef<Path>,
