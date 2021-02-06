@@ -1,12 +1,10 @@
 use crate::data::Duplicate;
 use crypto_hash::{self, Algorithm, Hasher};
 use std::collections::HashMap;
-use std::fs;
-use std::fs::File;
+use std::fs::{self, File};
 use std::hash::Hash;
 use std::io::{self, BufReader, Read, Write};
-use std::path::Path;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 const HEAD_SIZE: usize = 4_000;
 const FILE_BUFFER_SIZE: usize = 16_000;

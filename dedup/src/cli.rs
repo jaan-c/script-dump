@@ -1,8 +1,7 @@
-use std::path::PathBuf;
-use std::str::FromStr;
-
 use crate::keep::KeepCriteria;
 use clap::Clap;
+use std::path::PathBuf;
+use std::str::FromStr;
 
 #[derive(Clap, Debug)]
 #[clap(version = "0.8", author = "jaan-c")]

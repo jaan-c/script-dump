@@ -1,9 +1,8 @@
 use crate::data::Duplicate;
+use std::fs;
 use std::io;
-use std::path::Path;
-use std::path::PathBuf;
+use std::path::{Component, Path, PathBuf};
 use std::time::SystemTime;
-use std::{fs, path::Component};
 
 #[derive(Debug)]
 pub enum KeepCriteria {
