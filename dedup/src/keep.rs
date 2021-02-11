@@ -21,15 +21,15 @@ pub fn by_criteria(duplicate: &Duplicate, criteria: &KeepCriteria) -> io::Result
     }
 }
 
-fn keep_oldest(files: &Vec<PathBuf>) -> io::Result<PathBuf> {
+fn keep_oldest(files: &[PathBuf]) -> io::Result<PathBuf> {
     Ok(sort_by_mod_time(files)?.first().unwrap().clone())
 }
 
-fn keep_newest(files: &Vec<PathBuf>) -> io::Result<PathBuf> {
+fn keep_newest(files: &[PathBuf]) -> io::Result<PathBuf> {
     Ok(sort_by_mod_time(files)?.last().unwrap().clone())
 }
 
-fn sort_by_mod_time(files: &Vec<PathBuf>) -> io::Result<Vec<PathBuf>> {
+fn sort_by_mod_time(files: &[PathBuf]) -> io::Result<Vec<PathBuf>> {
     let mod_times = files
         .iter()
         .map(|f| get_modification_time(f))
@@ -54,15 +54,15 @@ where
     fs::metadata(path)?.modified()
 }
 
-fn keep_shallowest(files: &Vec<PathBuf>) -> io::Result<PathBuf> {
+fn keep_shallowest(files: &[PathBuf]) -> io::Result<PathBuf> {
     Ok(sort_by_path_depth(files)?.first().unwrap().clone())
 }
 
-fn keep_deepest(files: &Vec<PathBuf>) -> io::Result<PathBuf> {
+fn keep_deepest(files: &[PathBuf]) -> io::Result<PathBuf> {
     Ok(sort_by_path_depth(files)?.last().unwrap().clone())
 }
 
-fn sort_by_path_depth(files: &Vec<PathBuf>) -> io::Result<Vec<PathBuf>> {
+fn sort_by_path_depth(files: &[PathBuf]) -> io::Result<Vec<PathBuf>> {
     let depths = files
         .iter()
         .map(|f| get_path_depth(f))
