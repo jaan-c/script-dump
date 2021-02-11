@@ -152,3 +152,107 @@ where
 
     Ok(hex::encode(hasher.finish()))
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::find;
+    use rand::{self, Rng};
+    use std::collections::HashSet;
+    use std::fs;
+    use std::io::{self, Seek, SeekFrom, Write};
+    use std::path::{Path, PathBuf};
+    use tempfile::{self, NamedTempFile};
+
+    #[test]
+    fn find_duplicate_files() {
+        let head = random_bytes(find::HEAD_SIZE);
+        let body1 = random_bytes(find::HEAD_SIZE);
+        let body2 = random_bytes(find::HEAD_SIZE);
+        let body3 = random_bytes(find::HEAD_SIZE);
+
+        let dir = tempfile::tempdir().unwrap();
+
+        let _zero1 = temp_file_in(dir.path(), &[]);
+        let _zero2 = temp_file_in(dir.path(), &[]);
+        let _same_head1 = temp_file_in(dir.path(), &combine(&head, &body1));
+        let _same_head2 = temp_file_in(dir.path(), &combine(&head, &body2));
+        let same_content1 = temp_file_in(dir.path(), &combine(&head, &body3));
+        let same_content2 = temp_file_in(dir.path(), &combine(&head, &body3));
+        let _random1 = temp_file_in(dir.path(), &random_bytes(find::HEAD_SIZE * 2));
+        let _random2 = temp_file_in(dir.path(), &random_bytes(find::HEAD_SIZE * 3));
+
+        let results = [
+            &_zero1,
+            &_zero2,
+            &_same_head1,
+            &_same_head2,
+            &same_content1,
+            &same_content2,
+            &_random1,
+            &_random2,
+        ];
+        if results.iter().any(|r| r.is_err()) {
+            fs::remove_dir_all(dir.path()).unwrap();
+            panic!("Failed to create test files.");
+        }
+
+        let duplicates = find::duplicate_files(dir.path()).unwrap();
+        assert_eq!(duplicates.len(), 1);
+
+        let duplicate_paths = &duplicates.first().unwrap().files;
+        assert_eq!(duplicate_paths.len(), 2);
+        assert!(unordered_eq(
+            &duplicate_paths,
+            &[
+                same_content1.unwrap().path().to_path_buf(),
+                same_content2.unwrap().path().to_path_buf()
+            ]
+        ));
+    }
+
+    fn unordered_eq<P>(first: &[P], second: &[P]) -> bool
+    where
+        P: AsRef<Path>,
+    {
+        let first = first
+            .into_iter()
+            .map(|p| p.as_ref().to_path_buf())
+            .collect::<HashSet<PathBuf>>();
+        let second = second
+            .into_iter()
+            .map(|p| p.as_ref().to_path_buf())
+            .collect::<HashSet<PathBuf>>();
+
+        first == second
+    }
+
+    fn combine(first: &[u8], second: &[u8]) -> Vec<u8> {
+        let mut combined = Vec::with_capacity(first.len() + second.len());
+        combined.extend(first.iter().map(|b| b.clone()));
+        combined.extend(second.iter().map(|b| b.clone()));
+
+        combined
+    }
+
+    fn temp_file_in(dir: &Path, content: &[u8]) -> io::Result<NamedTempFile> {
+        let mut named_file = NamedTempFile::new_in(dir)?;
+        let file = named_file.as_file_mut();
+
+        file.write(content)?;
+        file.flush()?;
+        file.sync_all()?; // Sync metadata with file content changes.
+        file.seek(SeekFrom::Start(0))?;
+
+        Ok(named_file)
+    }
+
+    fn random_bytes(size: usize) -> Vec<u8> {
+        let mut bytes = Vec::with_capacity(size);
+        let mut rng = rand::thread_rng();
+        for _ in 0..size {
+            bytes.push(rng.gen::<u8>());
+        }
+
+        bytes
+    }
+}
