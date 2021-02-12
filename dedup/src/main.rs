@@ -13,7 +13,7 @@ fn main() -> io::Result<()> {
     for d in duplicates {
         println!("{}", &d.hash);
 
-        let kept = keep::by_criteria(&d, &args.keep_criteria)?;
+        let kept = keep::by_criteria(&d.files, &args.keep_criteria)?;
         let for_deletion = d.files.iter().filter(|f| **f != kept);
 
         println!("\tKept {}", kept.display());
