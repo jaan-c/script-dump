@@ -156,7 +156,6 @@ where
 #[cfg(test)]
 mod tests {
     use crate::find;
-    use fs::{remove_dir_all, remove_file};
     use rand::{self, Rng};
     use std::collections::HashSet;
     use std::fs;
