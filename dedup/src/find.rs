@@ -172,44 +172,42 @@ mod tests {
 
         let dir = tempfile::tempdir().unwrap();
 
-        (|| {
-            let _zero1 = temp_file_in(dir.path(), &[]);
-            let _zero2 = temp_file_in(dir.path(), &[]);
-            let _same_head1 = temp_file_in(dir.path(), &combine(&head, &body1));
-            let _same_head2 = temp_file_in(dir.path(), &combine(&head, &body2));
-            let same_content1 = temp_file_in(dir.path(), &combine(&head, &body3));
-            let same_content2 = temp_file_in(dir.path(), &combine(&head, &body3));
-            let _random1 = temp_file_in(dir.path(), &random_bytes(find::HEAD_SIZE * 2));
-            let _random2 = temp_file_in(dir.path(), &random_bytes(find::HEAD_SIZE * 3));
+        let _zero1 = temp_file_in(dir.path(), &[]);
+        let _zero2 = temp_file_in(dir.path(), &[]);
+        let _same_head1 = temp_file_in(dir.path(), &combine(&head, &body1));
+        let _same_head2 = temp_file_in(dir.path(), &combine(&head, &body2));
+        let same_content1 = temp_file_in(dir.path(), &combine(&head, &body3));
+        let same_content2 = temp_file_in(dir.path(), &combine(&head, &body3));
+        let _random1 = temp_file_in(dir.path(), &random_bytes(find::HEAD_SIZE * 2));
+        let _random2 = temp_file_in(dir.path(), &random_bytes(find::HEAD_SIZE * 3));
 
-            let results = [
-                &_zero1,
-                &_zero2,
-                &_same_head1,
-                &_same_head2,
-                &same_content1,
-                &same_content2,
-                &_random1,
-                &_random2,
-            ];
-            if results.iter().any(|r| r.is_err()) {
-                fs::remove_dir_all(dir.path()).unwrap();
-                panic!("Failed to create test files.");
-            }
+        let results = [
+            &_zero1,
+            &_zero2,
+            &_same_head1,
+            &_same_head2,
+            &same_content1,
+            &same_content2,
+            &_random1,
+            &_random2,
+        ];
+        if results.iter().any(|r| r.is_err()) {
+            fs::remove_dir_all(dir.path()).unwrap();
+            panic!("Failed to create test files.");
+        }
 
-            let duplicates = find::duplicate_files(dir.path()).unwrap();
-            assert_eq!(duplicates.len(), 1);
+        let duplicates = find::duplicate_files(dir.path()).unwrap();
+        assert_eq!(duplicates.len(), 1);
 
-            let duplicate_paths = &duplicates.first().unwrap().files;
-            assert_eq!(duplicate_paths.len(), 2);
-            assert!(unordered_eq(
-                &duplicate_paths,
-                &[
-                    same_content1.unwrap().path().to_path_buf(),
-                    same_content2.unwrap().path().to_path_buf()
-                ]
-            ));
-        })();
+        let duplicate_paths = &duplicates.first().unwrap().files;
+        assert_eq!(duplicate_paths.len(), 2);
+        assert!(unordered_eq(
+            &duplicate_paths,
+            &[
+                same_content1.unwrap().path().to_path_buf(),
+                same_content2.unwrap().path().to_path_buf()
+            ]
+        ));
     }
 
     fn unordered_eq<P>(first: &[P], second: &[P]) -> bool
