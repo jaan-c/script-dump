@@ -6,8 +6,11 @@ use std::str::FromStr;
 #[derive(Clap, Debug)]
 #[clap(version = "0.8", author = "jaan-c")]
 pub struct Args {
-    #[clap(about = "Directory to search for duplicate files.")]
-    pub directory: PathBuf,
+    #[clap(
+        value_name = "PATHS",
+        about = "Files or directory to search for duplicate files."
+    )]
+    pub paths: Vec<PathBuf>,
     #[clap(short, long, about = "Output only and do not perform any deletions.")]
     pub dry_run: bool,
     #[clap(

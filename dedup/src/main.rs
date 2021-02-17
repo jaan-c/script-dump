@@ -1,5 +1,5 @@
 mod cli;
-mod data;
+mod filesystem;
 mod find;
 mod keep;
 
@@ -9,7 +9,16 @@ use std::io;
 fn main() -> io::Result<()> {
     let args = cli::get_args();
 
-    let duplicates = find::duplicate_files(&args.directory)?;
+    let mut files = vec![];
+    for p in args.paths {
+        if p.is_dir() {
+            files.extend(filesystem::walk_files(p)?)
+        } else {
+            files.push(p)
+        }
+    }
+
+    let duplicates = find::duplicate_files(files)?;
     for d in duplicates {
         println!("{}", &d.hash);
 
