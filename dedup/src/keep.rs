@@ -113,3 +113,43 @@ where
         .collect::<Vec<Component>>()
         .len())
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::keep::{self, KeepCriteria};
+    use filetime::{self, FileTime};
+    use tempfile::{self, NamedTempFile};
+
+    #[test]
+    fn keep_by_criteria_oldest_and_newest() {
+        let file1 = NamedTempFile::new().unwrap();
+        let file2 = NamedTempFile::new().unwrap();
+        let file3 = NamedTempFile::new().unwrap();
+        let duplicates = vec![file1.path(), file2.path(), file3.path()];
+
+        filetime::set_file_mtime(file1.path(), FileTime::zero()).unwrap();
+        filetime::set_file_mtime(file2.path(), FileTime::from_unix_time(1000, 0)).unwrap();
+        filetime::set_file_mtime(file3.path(), FileTime::from_unix_time(2000, 0)).unwrap();
+
+        let oldest = keep::by_criteria(&duplicates, &KeepCriteria::Oldest).unwrap();
+        let newest = keep::by_criteria(&duplicates, &KeepCriteria::Newest).unwrap();
+
+        assert_eq!(oldest, file1.path());
+        assert_eq!(newest, file3.path());
+    }
+
+    #[test]
+    fn keep_by_criteria_shallowest_and_deepest() {
+        let dir1 = tempfile::tempdir().unwrap();
+        let dir2 = tempfile::tempdir_in(dir1.path()).unwrap();
+        let file1 = NamedTempFile::new_in(dir1.path()).unwrap();
+        let file2 = NamedTempFile::new_in(dir2.path()).unwrap();
+        let duplicates = vec![file1.path(), file2.path()];
+
+        let shallowest = keep::by_criteria(&duplicates, &KeepCriteria::Shallowest).unwrap();
+        let deepest = keep::by_criteria(&duplicates, &KeepCriteria::Deepest).unwrap();
+
+        assert_eq!(shallowest, file1.path());
+        assert_eq!(deepest, file2.path());
+    }
+}
