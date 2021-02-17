@@ -28,9 +28,9 @@ fn main() -> io::Result<()> {
         println!("\tKept {}", kept.display());
         for f in for_deletion {
             if !args.dry_run {
-                match fs::remove_file(f) {
+                match fs::remove_file(&f) {
                     Ok(()) => println!("\tDeleted {}", f.display()),
-                    Err(error) => println!("\tFailed to delete {}: {}", f.display(), error),
+                    Err(error) => println!("\tFailed to delete {}: {}", &f.display(), error),
                 }
             } else {
                 println!("\tDeleted {}", f.display());
