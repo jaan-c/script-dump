@@ -158,7 +158,6 @@ mod tests {
     use crate::find;
     use rand::{self, Rng};
     use std::collections::HashSet;
-    use std::fs;
     use std::io::{self, Seek, SeekFrom, Write};
     use std::path::{Path, PathBuf};
     use tempfile::{self, NamedTempFile};
@@ -172,29 +171,14 @@ mod tests {
 
         let dir = tempfile::tempdir().unwrap();
 
-        let _zero1 = temp_file_in(dir.path(), &[]);
-        let _zero2 = temp_file_in(dir.path(), &[]);
-        let _same_head1 = temp_file_in(dir.path(), &combine(&head, &body1));
-        let _same_head2 = temp_file_in(dir.path(), &combine(&head, &body2));
-        let same_content1 = temp_file_in(dir.path(), &combine(&head, &body3));
-        let same_content2 = temp_file_in(dir.path(), &combine(&head, &body3));
-        let _random1 = temp_file_in(dir.path(), &random_bytes(find::HEAD_SIZE * 2));
-        let _random2 = temp_file_in(dir.path(), &random_bytes(find::HEAD_SIZE * 3));
-
-        let results = [
-            &_zero1,
-            &_zero2,
-            &_same_head1,
-            &_same_head2,
-            &same_content1,
-            &same_content2,
-            &_random1,
-            &_random2,
-        ];
-        if results.iter().any(|r| r.is_err()) {
-            fs::remove_dir_all(dir.path()).unwrap();
-            panic!("Failed to create test files.");
-        }
+        let _zero1 = temp_file_in(dir.path(), &[]).unwrap();
+        let _zero2 = temp_file_in(dir.path(), &[]).unwrap();
+        let _same_head1 = temp_file_in(dir.path(), &combine(&head, &body1)).unwrap();
+        let _same_head2 = temp_file_in(dir.path(), &combine(&head, &body2)).unwrap();
+        let same_content1 = temp_file_in(dir.path(), &combine(&head, &body3)).unwrap();
+        let same_content2 = temp_file_in(dir.path(), &combine(&head, &body3)).unwrap();
+        let _random1 = temp_file_in(dir.path(), &random_bytes(find::HEAD_SIZE * 2)).unwrap();
+        let _random2 = temp_file_in(dir.path(), &random_bytes(find::HEAD_SIZE * 3)).unwrap();
 
         let duplicates = find::duplicate_files(dir.path()).unwrap();
         assert_eq!(duplicates.len(), 1);
@@ -204,8 +188,8 @@ mod tests {
         assert!(unordered_eq(
             &duplicate_paths,
             &[
-                same_content1.unwrap().path().to_path_buf(),
-                same_content2.unwrap().path().to_path_buf()
+                same_content1.path().to_path_buf(),
+                same_content2.path().to_path_buf()
             ]
         ));
     }
