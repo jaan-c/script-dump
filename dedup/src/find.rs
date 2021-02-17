@@ -14,11 +14,11 @@ const HASH_ALGORITHM: Algorithm = Algorithm::SHA256;
 ///
 /// Zero byte files are ignored. An [`std::io::Error`] is returned immediately
 /// for any IO errors encountered.
-pub fn duplicate_files<P>(directory: P) -> io::Result<Vec<Duplicate>>
+pub fn duplicate_files<P>(files: Vec<P>) -> io::Result<Vec<Duplicate>>
 where
     P: AsRef<Path>,
 {
-    let files = descendant_files(directory)?;
+    let files = files.into_iter().map(|p| p.as_ref().to_path_buf());
 
     let files = omit_size_singletons(files)?;
     let files = omit_head_hash_singletons(files)?;
@@ -28,40 +28,6 @@ where
         .into_iter()
         .map(|(h, f)| Duplicate::new(h, f))
         .collect())
-}
-
-fn descendant_files<P>(directory: P) -> io::Result<Vec<PathBuf>>
-where
-    P: AsRef<Path>,
-{
-    let mut files = vec![];
-
-    let mut parents = vec![directory.as_ref().to_path_buf()];
-    while !parents.is_empty() {
-        let mut new_parents = vec![];
-
-        for dir in parents {
-            let (mut child_files, mut child_dirs) = partition_directory_children(dir)?;
-            files.append(&mut child_files);
-            new_parents.append(&mut child_dirs);
-        }
-
-        parents = new_parents;
-    }
-
-    Ok(files)
-}
-
-/// Partition children of directory into a pair of files and directories.
-fn partition_directory_children<P>(directory: P) -> io::Result<(Vec<PathBuf>, Vec<PathBuf>)>
-where
-    P: AsRef<Path>,
-{
-    let children = fs::read_dir(directory)?
-        .map(|e| Ok(e?.path()))
-        .collect::<io::Result<Vec<PathBuf>>>()?;
-
-    Ok(children.into_iter().partition(|c| c.is_file()))
 }
 
 fn omit_size_singletons<I>(files: I) -> io::Result<Vec<PathBuf>>
@@ -169,18 +135,26 @@ mod tests {
         let body2 = random_bytes(find::HEAD_SIZE);
         let body3 = random_bytes(find::HEAD_SIZE);
 
-        let dir = tempfile::tempdir().unwrap();
+        let _zero1 = temp_file(&[]).unwrap();
+        let _zero2 = temp_file(&[]).unwrap();
+        let _same_head1 = temp_file(&combine(&head, &body1)).unwrap();
+        let _same_head2 = temp_file(&combine(&head, &body2)).unwrap();
+        let same_content1 = temp_file(&combine(&head, &body3)).unwrap();
+        let same_content2 = temp_file(&combine(&head, &body3)).unwrap();
+        let _random1 = temp_file(&random_bytes(find::HEAD_SIZE * 2)).unwrap();
+        let _random2 = temp_file(&random_bytes(find::HEAD_SIZE * 3)).unwrap();
+        let files = vec![
+            &_zero1,
+            &_zero2,
+            &_same_head1,
+            &_same_head2,
+            &same_content1,
+            &same_content2,
+            &_random1,
+            &_random2,
+        ];
 
-        let _zero1 = temp_file_in(dir.path(), &[]).unwrap();
-        let _zero2 = temp_file_in(dir.path(), &[]).unwrap();
-        let _same_head1 = temp_file_in(dir.path(), &combine(&head, &body1)).unwrap();
-        let _same_head2 = temp_file_in(dir.path(), &combine(&head, &body2)).unwrap();
-        let same_content1 = temp_file_in(dir.path(), &combine(&head, &body3)).unwrap();
-        let same_content2 = temp_file_in(dir.path(), &combine(&head, &body3)).unwrap();
-        let _random1 = temp_file_in(dir.path(), &random_bytes(find::HEAD_SIZE * 2)).unwrap();
-        let _random2 = temp_file_in(dir.path(), &random_bytes(find::HEAD_SIZE * 3)).unwrap();
-
-        let duplicates = find::duplicate_files(dir.path()).unwrap();
+        let duplicates = find::duplicate_files(files).unwrap();
         assert_eq!(duplicates.len(), 1);
 
         let duplicate_paths = &duplicates.first().unwrap().files;
@@ -218,8 +192,8 @@ mod tests {
         combined
     }
 
-    fn temp_file_in(dir: &Path, content: &[u8]) -> io::Result<NamedTempFile> {
-        let mut named_file = NamedTempFile::new_in(dir)?;
+    fn temp_file(content: &[u8]) -> io::Result<NamedTempFile> {
+        let mut named_file = NamedTempFile::new()?;
         let file = named_file.as_file_mut();
 
         file.write(content)?;
