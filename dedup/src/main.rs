@@ -23,7 +23,7 @@ fn main() -> io::Result<()> {
         println!("{}", &d.hash);
 
         let kept = keep::by_criteria(&d.files, &args.keep_criteria)?;
-        let for_deletion = d.files.iter().filter(|f| **f != kept);
+        let for_deletion = d.files.into_iter().filter(|f| *f != kept);
 
         println!("\tKept {}", kept.display());
         for f in for_deletion {
