@@ -1,4 +1,3 @@
-use crate::data::Duplicate;
 use crypto_hash::{self, Algorithm, Hasher};
 use std::collections::HashMap;
 use std::fs::{self, File};
@@ -9,6 +8,22 @@ use std::path::{Path, PathBuf};
 const HEAD_SIZE: usize = 4_000;
 const FILE_BUFFER_SIZE: usize = 16_000;
 const HASH_ALGORITHM: Algorithm = Algorithm::SHA256;
+
+#[derive(Debug)]
+pub struct Duplicate {
+    pub hash: String,
+    pub files: Vec<PathBuf>,
+}
+
+impl Duplicate {
+    pub fn new(hash: String, files: Vec<PathBuf>) -> Duplicate {
+        if files.len() < 2 {
+            panic!("files length must be greater than 2.");
+        }
+
+        Duplicate { hash, files }
+    }
+}
 
 /// Find all duplicate files under `directory`.
 ///
@@ -121,12 +136,38 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::find;
+    use crate::find::{self, Duplicate};
     use rand::{self, Rng};
     use std::collections::HashSet;
     use std::io::{self, Seek, SeekFrom, Write};
     use std::path::{Path, PathBuf};
     use tempfile::{self, NamedTempFile};
+
+    #[test]
+    fn duplicate_new() {
+        let dup = Duplicate::new(
+            "Hello".to_string(),
+            vec![
+                Path::new("Hello").to_path_buf(),
+                Path::new("World").to_path_buf(),
+            ],
+        );
+
+        assert_eq!(dup.hash, "Hello");
+        assert_eq!(
+            dup.files,
+            vec![
+                Path::new("Hello").to_path_buf(),
+                Path::new("World").to_path_buf(),
+            ]
+        );
+    }
+
+    #[test]
+    #[should_panic]
+    fn duplicate_new_invalid_files() {
+        Duplicate::new("Hello".to_string(), vec![Path::new("Hello").to_path_buf()]);
+    }
 
     #[test]
     fn find_duplicate_files() {
