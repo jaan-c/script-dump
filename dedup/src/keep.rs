@@ -15,6 +15,11 @@ pub fn by_criteria<P>(duplicate_files: &[P], criteria: &KeepCriteria) -> io::Res
 where
     P: AsRef<Path>,
 {
+    let duplicate_files = duplicate_files
+        .into_iter()
+        .map(|p| p.as_ref().to_path_buf())
+        .collect::<Vec<PathBuf>>();
+
     match criteria {
         KeepCriteria::Oldest => keep_oldest(duplicate_files),
         KeepCriteria::Newest => keep_newest(duplicate_files),
@@ -23,28 +28,15 @@ where
     }
 }
 
-fn keep_oldest<P>(files: &[P]) -> io::Result<PathBuf>
-where
-    P: AsRef<Path>,
-{
+fn keep_oldest(files: Vec<PathBuf>) -> io::Result<PathBuf> {
     Ok(sort_by_mod_time(files)?.first().unwrap().clone())
 }
 
-fn keep_newest<P>(files: &[P]) -> io::Result<PathBuf>
-where
-    P: AsRef<Path>,
-{
+fn keep_newest(files: Vec<PathBuf>) -> io::Result<PathBuf> {
     Ok(sort_by_mod_time(files)?.last().unwrap().clone())
 }
 
-fn sort_by_mod_time<P>(files: &[P]) -> io::Result<Vec<PathBuf>>
-where
-    P: AsRef<Path>,
-{
-    let files = files
-        .iter()
-        .map(|f| f.as_ref().to_path_buf())
-        .collect::<Vec<PathBuf>>();
+fn sort_by_mod_time(files: Vec<PathBuf>) -> io::Result<Vec<PathBuf>> {
     let mod_times = files
         .iter()
         .map(|f| get_modification_time(f))
@@ -66,28 +58,15 @@ where
     fs::metadata(path)?.modified()
 }
 
-fn keep_shallowest<P>(files: &[P]) -> io::Result<PathBuf>
-where
-    P: AsRef<Path>,
-{
+fn keep_shallowest(files: Vec<PathBuf>) -> io::Result<PathBuf> {
     Ok(sort_by_path_depth(files)?.first().unwrap().clone())
 }
 
-fn keep_deepest<P>(files: &[P]) -> io::Result<PathBuf>
-where
-    P: AsRef<Path>,
-{
+fn keep_deepest(files: Vec<PathBuf>) -> io::Result<PathBuf> {
     Ok(sort_by_path_depth(files)?.last().unwrap().clone())
 }
 
-fn sort_by_path_depth<P>(files: &[P]) -> io::Result<Vec<PathBuf>>
-where
-    P: AsRef<Path>,
-{
-    let files = files
-        .iter()
-        .map(|f| f.as_ref().to_path_buf())
-        .collect::<Vec<PathBuf>>();
+fn sort_by_path_depth(files: Vec<PathBuf>) -> io::Result<Vec<PathBuf>> {
     let depths = files
         .iter()
         .map(|f| get_path_depth(f))
