@@ -4,11 +4,15 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 #[derive(Clap, Debug)]
-#[clap(version = "0.8", author = "jaan-c")]
+#[clap(
+    version = "0.8",
+    author = "jaan-c",
+    about = "Find and delete duplicate files."
+)]
 pub struct Args {
     #[clap(
         value_name = "PATHS",
-        about = "Files or directory to search for duplicate files."
+        about = "Files or directory to check for duplicate files."
     )]
     pub paths: Vec<PathBuf>,
     #[clap(short, long, about = "Output only and do not perform any deletions.")]
