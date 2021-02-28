@@ -50,12 +50,7 @@ impl Iterator for FileWalker {
         self.pending_yield = new_pending_yield;
         self.parents = new_parents;
 
-        if !self.pending_yield.is_empty() {
-            let first = self.pending_yield.remove(0);
-            Some(first)
-        } else {
-            self.next()
-        }
+        self.next()
     }
 }
 
