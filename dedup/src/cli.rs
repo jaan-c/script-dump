@@ -46,7 +46,7 @@ fn parse_args() -> Result<Args, pico::Error> {
     if pargs.contains(["-h", "--help"]) {
         print!("{}", HELP);
         process::exit(0);
-    } else if pargs.contains(["-h", "--version"]) {
+    } else if pargs.contains(["-v", "--version"]) {
         println!("{}", VERSION);
         process::exit(0);
     }
