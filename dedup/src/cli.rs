@@ -30,14 +30,14 @@ pub struct Args {
 }
 
 pub fn get_args() -> Args {
-    return match parse_args() {
+    match parse_args() {
         Ok(args) => args,
         Err(err) => {
             println!("{}", err);
             print!("{}", HELP);
             process::exit(0);
         }
-    };
+    }
 }
 
 fn parse_args() -> Result<Args, pico::Error> {
