@@ -33,7 +33,7 @@ pub fn get_args() -> Args {
     match parse_args() {
         Ok(args) => args,
         Err(err) => {
-            println!("{}", err);
+            eprintln!("{}", err);
             print!("{}", HELP);
             process::exit(0);
         }
