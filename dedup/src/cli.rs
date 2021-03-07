@@ -18,8 +18,7 @@ OPTIONS:
     -d, --dry-run       Output only and don't perform any deletion.
     -k, --keep-criteria [oldest, newest, shallowest, deepest]
                         Criteria of which file to keep from duplicates. Defaults
-                        to newest.
-";
+                        to newest.";
 const VERSION: &str = "dedup 0.8";
 
 #[derive(Debug)]
